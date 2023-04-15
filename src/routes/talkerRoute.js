@@ -12,6 +12,7 @@ const {
   validateDateQuery,
   validateRateBody,
 } = require('../middlewares/validated');
+const { getAll } = require('../db');
 
 const routes = new Router();
 
@@ -61,6 +62,25 @@ routes.post('/', middlewares, async (req, res) => {
   const newData = [...data, { id, name, age, talk }];
   await writeJson(newData);
   return res.status(201).json({ id, name, age, talk });
+});
+
+routes.get('/db', async (_req, res) => {
+  try {
+    const [data] = await getAll();
+    const newData = data.map((item) => ({
+      id: item.id,
+      name: item.name,
+      age: item.age,
+      talk: {
+        watchedAt: item.talk_watched_at,
+        rate: item.talk_rate,
+      },
+    }));
+    await writeJson(newData);
+    return res.status(200).json(newData);
+  } catch (err) {
+    return res.sendStatus(500);
+  }
 });
 
 routes.get('/:id', searchId, async (req, res) => {
