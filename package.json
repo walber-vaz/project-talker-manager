@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.3",
-    "express": "4.17.1",
+    "express": "4.18.2",
     "express-rescue": "1.1.30",
     "mysql2": "2.3.3"
   },
