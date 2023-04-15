@@ -57,4 +57,12 @@ routes.put('/:id', middlewares, searchId, async (req, res) => {
   return res.status(200).json(newTalker);
 });
 
+routes.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const data = await readJson();
+  const newData = data.filter((item) => item.id !== Number(id));
+  await writeJson(newData);
+  return res.status(204).json();
+});
+
 module.exports = routes;
