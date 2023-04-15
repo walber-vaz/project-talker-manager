@@ -76,9 +76,9 @@ routes.get('/db', async (_req, res) => {
         rate: item.talk_rate,
       },
     }));
-    return res.status(200).json(newData);
+    res.status(200).json(newData);
   } catch (err) {
-    return res.sendStatus(500);
+    res.sendStatus(500);
   }
 });
 
