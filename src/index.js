@@ -15,7 +15,7 @@ app.get('/', (_request, response) => {
 app.use('/talker', talkerRoute);
 app.use('/login', loginRoute);
 
-app.use((err, _req, res, _next) => res.status(err.status || 500).json({ message: err.message }));
+app.use((err, _req, res, _next) => res.status(err.status).json({ message: err.message }));
 
 app.listen(PORT, () => {
   console.log('Online');

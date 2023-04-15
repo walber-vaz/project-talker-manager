@@ -9,9 +9,8 @@ const readJson = async () => {
   return isData;
 };
 
-const writeJson = async () => {
-  const passData = await readJson();
-  const data = JSON.stringify(passData, null, 2, { encoding: 'utf-8' });
+const writeJson = async (obj) => {
+  const data = JSON.stringify(obj, null, 2, { encoding: 'utf-8' });
   await fs.writeFile(pathJson, data);
 };
 
