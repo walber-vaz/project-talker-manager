@@ -10,6 +10,7 @@ const {
   validateRate,
   validateRateQuery,
   validateDateQuery,
+  validateRateBody,
 } = require('../middlewares/validated');
 
 const routes = new Router();
@@ -91,6 +92,23 @@ routes.delete('/:id', validateToken, async (req, res) => {
   const newData = data.filter((item) => item.id !== Number(id));
   await writeJson(newData);
   return res.status(204).json();
+});
+
+routes.patch('/rate/:id', validateToken, validateRateBody, async (req, res) => {
+  const { id } = req.params;
+  const { rate } = req.body;
+  const data = await readJson();
+  const talker = data.find((item) => item.id === Number(id));
+  const newTalker = {
+    ...talker,
+    talk: {
+      ...talker.talk,
+      rate,
+    },
+  };
+  const newData = data.map((item) => (item.id === talker.id ? newTalker : item));
+  await writeJson(newData);
+  return res.sendStatus(204);
 });
 
 module.exports = routes;

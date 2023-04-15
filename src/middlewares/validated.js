@@ -115,9 +115,20 @@ const validateDateQuery = (req, res, next) => {
   const { date } = req.query;
   const regex = /^\d{2}\/\d{2}\/\d{4}$/;
 
-  if (date !== undefined && !regex.test(date)) {
+  if (date && !regex.test(date)) {
     return res.status(400).json({
       message: 'O parâmetro "date" deve ter o formato "dd/mm/aaaa"',
+    });
+  }
+  next();
+};
+
+const validateRateBody = (req, res, next) => {
+  const { rate } = req.body;
+  if (rate === undefined) return next({ status: 400, message: 'O campo "rate" é obrigatório' });
+  if (rate <= 0 || rate > 5 || !Number.isInteger(rate)) {
+    return next({
+      status: 400, message: 'O campo "rate" deve ser um número inteiro entre 1 e 5',
     });
   }
   next();
@@ -135,4 +146,5 @@ module.exports = {
   validateRate,
   validateRateQuery,
   validateDateQuery,
+  validateRateBody,
 };
