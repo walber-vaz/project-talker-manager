@@ -65,22 +65,14 @@ routes.post('/', middlewares, async (req, res) => {
 });
 
 routes.get('/db', async (_req, res) => {
-  try {
-    const [data] = await getAll();
-    const newData = data.map((item) => ({
-      id: item.id,
-      name: item.name,
-      age: item.age,
-      talk: {
-        watchedAt: item.talk_watched_at,
-        rate: item.talk_rate,
-      },
-    }));
-    res.status(200).json(newData);
-  } catch (err) {
-    res.sendStatus(500);
-  }
+  const [data] = await getAll();
+  const newData = data.map(({ talk_rate, watched_at, ...item }) => ({
+    ...item,
+    talk: { rate: talk_rate, watchedAt: watched_at },
+  }));
+  return res.status(200).json(newData);
 });
+
 
 routes.get('/:id', searchId, async (req, res) => {
   const { id } = req.params;
