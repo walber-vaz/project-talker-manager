@@ -8,14 +8,35 @@ const {
   validateTalk,
   validateWatchedAt,
   validateRate,
+  validateRateQuery,
+  validateDateQuery,
 } = require('../middlewares/validated');
 
 const routes = new Router();
 
-routes.get('/search', validateToken, async (req, res) => {
-  const { q } = req.query;
+function searchFilter(data, q, rate, date) {
+  const filters = [
+    { validate: (item) => item.name.toLowerCase().includes(q.toLowerCase()), value: q },
+    { validate: (item) => item.talk.rate === Number(rate), value: rate },
+    { validate: (item) => item.talk.watchedAt === date, value: date },
+  ];
+
+  const filteredData = data.filter((item) =>
+    filters.every((filter) => (filter.value ? filter.validate(item) : true)));
+
+  return filteredData;
+}
+
+routes.get('/search', validateToken, validateRateQuery, validateDateQuery, async (req, res) => {
+  const { q, rate, date } = req.query;
   const data = await readJson();
-  const search = data.filter((item) => item.name.includes(q));
+  const params = {
+    q,
+    rate,
+    date,
+    data,
+  };
+  const search = searchFilter(params.data, params.q, params.rate, params.date);
   return res.status(200).json(search);
 });
 
