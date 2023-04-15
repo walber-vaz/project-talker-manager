@@ -47,6 +47,17 @@ routes.get('/', async (_req, res) => {
   return res.status(200).json(data);
 });
 
+routes.get('/db', async (_req, res) => {
+  const data = await getAll();
+  const newData = data.map(({ 
+    talk_rate: talkRate, watched_at: watchedAt, talk_watched_at: talkWatchedAt, ...item 
+  }) => ({
+    ...item,
+    talk: { rate: talkRate, watchedAt: talkWatchedAt },
+  }));
+  return res.status(200).json(newData);
+});
+
 const middlewares = [
   validateToken,
   validateName,
@@ -62,15 +73,6 @@ routes.post('/', middlewares, async (req, res) => {
   const newData = [...data, { id, name, age, talk }];
   await writeJson(newData);
   return res.status(201).json({ id, name, age, talk });
-});
-
-routes.get('/db', async (_req, res) => {
-  const [data] = await getAll();
-  const newData = data.map(({ talk_rate: talkRate, watched_at: watchedAt, ...item }) => ({
-    ...item,
-    talk: { rate: talkRate, watchedAt },
-  }));
-  return res.status(200).json(newData);
 });
 
 routes.get('/:id', searchId, async (req, res) => {
