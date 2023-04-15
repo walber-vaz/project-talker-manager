@@ -66,13 +66,12 @@ routes.post('/', middlewares, async (req, res) => {
 
 routes.get('/db', async (_req, res) => {
   const [data] = await getAll();
-  const newData = data.map(({ talk_rate, watched_at, ...item }) => ({
+  const newData = data.map(({ talk_rate: talkRate, watched_at: watchedAt, ...item }) => ({
     ...item,
-    talk: { rate: talk_rate, watchedAt: watched_at },
+    talk: { rate: talkRate, watchedAt },
   }));
   return res.status(200).json(newData);
 });
-
 
 routes.get('/:id', searchId, async (req, res) => {
   const { id } = req.params;
