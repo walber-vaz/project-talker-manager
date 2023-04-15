@@ -76,7 +76,6 @@ routes.get('/db', async (_req, res) => {
         rate: item.talk_rate,
       },
     }));
-    await writeJson(newData);
     return res.status(200).json(newData);
   } catch (err) {
     return res.sendStatus(500);
@@ -111,7 +110,7 @@ routes.delete('/:id', validateToken, async (req, res) => {
   const data = await readJson();
   const newData = data.filter((item) => item.id !== Number(id));
   await writeJson(newData);
-  return res.status(204).json();
+  return res.sendStatus(204);
 });
 
 routes.patch('/rate/:id', validateToken, validateRateBody, async (req, res) => {
