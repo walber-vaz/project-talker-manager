@@ -12,6 +12,13 @@ const {
 
 const routes = new Router();
 
+routes.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const data = await readJson();
+  const search = data.filter((item) => item.name.includes(q));
+  return res.status(200).json(search);
+});
+
 routes.get('/', async (_req, res) => {
   const data = await readJson();
   return res.status(200).json(data);
