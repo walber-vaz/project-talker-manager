@@ -41,4 +41,20 @@ routes.get('/:id', searchId, async (req, res) => {
   return res.status(200).json({ ...findId });
 });
 
+routes.put('/:id', middlewares, searchId, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const data = await readJson();
+  const talker = data.find((item) => item.id === Number(id));
+  const newTalker = {
+    id: Number(id),
+    name,
+    age,
+    talk,
+  };
+  const newData = data.map((item) => (item.id === talker.id ? newTalker : item));
+  await writeJson(newData);
+  return res.status(200).json(newTalker);
+});
+
 module.exports = routes;
